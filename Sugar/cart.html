@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style>
+    button:hover{
+       background-color: black;
+       color: white;
+    }
+    
+    .continue-shopping-btn {
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    }
+    
+    .continue-shopping-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .cart-item {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  margin-bottom: 20px;
+  padding: 16px;
+  transition: box-shadow 0.2s;
+}
+.cart-item:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+.cart-item-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 20px;
+  border: 1px solid #eee;
+}
+.cart-item-details {
+  flex: 1;
+}
+.cart-item-title {
+  margin: 0 0 6px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.cart-item-desc {
+  margin: 0 0 10px 0;
+  color: #888;
+  font-size: 0.95rem;
+}
+.cart-item-qty-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.qty-btn {
+  background: #eee;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin: 0 4px;
+  transition: background 0.2s;
+}
+.qty-btn:hover {
+  background: #ddd;
+}
+.cart-item-qty {
+  min-width: 24px;
+  display: inline-block;
+  text-align: center;
+}
+.cart-item-price {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #222;
+}
+.cart-item-remove {
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+.cart-item-remove:hover {
+  background: #d9363e;
+}
+</style>
+</head>
+<body>
+     <div class="div w-full h-10 bg-black flex justify-evenly pt-2  max-sm:w-389 max-xl:w-388 max-2xl:w-380">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m14 7l-5 5l5 5" stroke-width="1" />
+        </svg>
+        
+        
+        <h1 class="text-white underline text-xs max-sm:text-2xl max-xl:text-xl">HURRY: BUY 2, GEL 1 FREE IS LIVE!</h1>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" d="m10 17l5-5l-5-5" stroke-width="1" />
+        </svg>
+    </div>
+
+    <!-- nav -->
+     <div class="nav w-full h-20 flex justify-evenly items-center max-sm:w-26 max-sm:ml-10 max-xl:w-386 max-2xl:w-380">
+      
+         <div class=" max-sm:ml-0 max-md:ml-30 hidden max-sm:flex max-md:flex max-xl:flex ">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 16 16">
+                       <path fill="#422318" fill-rule="evenodd" d="M1.25 3.25A.75.75 0 0 1 2 2.5h12A.75.75 0 0 1 14 4H2a.75.75 0 0 1-.75-.75m0 4.75A.75.75 0 0 1 2 7.25h12a.75.75 0 0 1 0 1.5H2A.75.75 0 0 1 1.25 8M2 12a.75.75 0 0 0 0 1.5h12a.75.75 0 0 0 0-1.5z" clip-rule="evenodd" stroke-width="0.5" stroke="#422318" />
+                   </svg>
+                </div>
+       
+        <div class="logo w-40 cursor-pointer max-sm:w-65 max-xl:w-55 max-xl:ml-80 max-sm:ml-10">
+            <img src="./images/1.png" alt="" class="max-sm:w-60 max-sm:ml-140">
+        </div>
+        <ul class="nav flex gap-10 max-sm:hidden max-xl:hidden text-20px">
+            <li class="cursor-pointer">NEW</li>
+            <li class="cursor-pointer">LIPS </li>
+            <li class="cursor-pointer">EYES</li>
+            <li class="cursor-pointer">FACE</li>
+            <li class="cursor-pointer">NAILS</li>
+            <li class="cursor-pointer">SKIN</li>
+            <li class="cursor-pointer">OFFERS</li>
+            <li class="cursor-pointer">GIFTING</li>
+            <li class="cursor-pointer">SUGER POP</li>
+            <li class="cursor-pointer">SUGAR PLAY</li>
+            <li class="cursor-pointer">SUGAR X NIKE</li>
+        </ul>
+        <div class="profile flex justify-around w-40 max-sm:ml-220 max-xl:ml-100">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="cursor-pointer max-sm:w-15 max-sm:h-15 max-xl:w-15 max-xl:h-15">
+	    <g fill="#000" fill-rule="evenodd" clip-rule="evenodd" stroke-width="0.5" stroke="#000">
+		<path d="M10.5 5.5a5 5 0 1 0 0 10a5 5 0 0 0 0-10m-6.5 5a6.5 6.5 0 1 1 13 0a6.5 6.5 0 0 1-13 0" />
+		<path d="M14.47 14.47a.75.75 0 0 1 1.06 0l4 4a.75.75 0 1 1-1.06 1.06l-4-4a.75.75 0 0 1 0-1.06" />
+	    </g>
+        </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256" class="cursor-pointer max-sm:hidden max-xl:hidden">
+	    <path fill="#000" d="M229.19 213c-15.81-27.32-40.63-46.49-69.47-54.62a70 70 0 1 0-63.44 0C67.44 166.5 42.62 185.67 26.81 213a6 6 0 1 0 10.38 6c19.21-33.19 53.15-53 90.81-53s71.6 19.81 90.81 53a6 6 0 1 0 10.38-6M70 96a58 58 0 1 1 58 58a58.07 58.07 0 0 1-58-58" stroke-width="6.5" stroke="#000" />
+        </svg>
+
+        <a href="./cart.html" class="add-to-cart">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" class="cursor-pointer max-sm:w-15 max-sm:h-11 max-sm:ml-10 max-xl:w-11 max-xl:h-11">
+                <path fill="#000" d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" stroke-width="0.5" stroke="#000" />
+            </svg>
+            <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+        </a>
+        <div id="cart-items"></div>
+
+        </div>
+         </div>
+      </div> 
+      <!-- nav -->
+
+  
+
+       
+
+      <div class="flex justify-center items-center min-h-screen text-center">
+        <div class="w-full max-w-4xl p-8">
+            <h1 class="text-3xl mb-8">SHOPPING CART</h1>
+            
+          
+            
+            <div id="empty-cart" >
+                <a href="./index.html" class="continue-shopping-btn cursor-pointer border-1 p-5 pl-15 pr-15 mt-5 inline-block bg-black text-white hover:bg-gray-800 transition-colors duration-200 rounded-lg">
+                    CONTINUE SHOPPING
+                </a>
+            </div>
+        </div>
+      </div>
+
+
+
+<script>
+   
+        function getData(){
+    const Products = [
+  {
+    id: "P001",
+    name: "Matte Attack Transferproof Lipstick",
+    price: 699,
+    discountPrice: 499,
+    category: "Lips",
+    rating: 4.5,
+    image: "https://cdn.sugarcosmetics.com/products/1234.jpg",
+    inStock: true,
+    shades: ["01 Bold", "02 Red Rush", "03 Mauve"],
+    tags: ["bestseller", "transferproof", "long-lasting"]
+  },
+  {
+    id: "P002",
+    name: "Ace Of Face Foundation Stick",
+    price: 999,
+    discountPrice: 799,
+    category: "Face",
+    rating: 4.3,
+    image: "https://cdn.sugarcosmetics.com/products/2234.jpg",
+    inStock: true,
+    shades: ["10 Latte", "15 Cappuccino", "20 Mocha"],
+    tags: ["stick", "foundation", "SPF"]
+  },
+  {
+    id: "P003",
+    name: "Contour De Force Face Palette",
+    price: 1099,
+    discountPrice: 899,
+    category: "Face Palette",
+    rating: 4.7,
+    image: "https://cdn.sugarcosmetics.com/products/3344.jpg",
+    inStock: false,
+    shades: ["Subtle Summit", "Vivid Victory"],
+    tags: ["contour", "blush", "highlight"]
+  },
+  {
+    id: "P004",
+    name: "Uptown Curl Mascara - Mini",
+    price: 499,
+    discountPrice: 399,
+    category: "Eyes",
+    rating: 4.2,
+    image: "https://cdn.sugarcosmetics.com/products/4455.jpg",
+    inStock: true,
+    shades: [],
+    tags: ["mascara", "curl", "mini"]
+  }
+];
+
+}
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Save cart to localStorage
+    function saveCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateBadge();
+        renderCart();
+    }
+
+    // Update cart badge
+    function updateBadge() {
+        const badge = document.getElementById("cart-badge");
+        if (!badge) return;
+        badge.textContent = cart.length;
+        badge.classList.toggle("hidden", cart.length === 0);
+    }
+
+    // Add product to cart
+    function addToCart(product) {
+        const exists = cart.find(item => item.id === product.id);
+        if (exists) {
+            exists.qty += 1;
+        } else {
+            cart.push({...product, qty: 1});
+        }
+        saveCart();
+    }
+
+    // Remove product from cart
+    function removeFromCart(id) {
+        cart = cart.filter(item => item.id !== id);
+        saveCart();
+    }
+
+    // Render cart items (for remove buttons)
+    function renderCart() {
+        const container = document.getElementById("cart-items");
+        const emptyCart = document.getElementById("empty-cart");
+
+        if (!container || !emptyCart) return;
+
+        container.innerHTML = "";
+
+        if (cart.length === 0) {
+            emptyCart.style.display = "block";
+            return;
+        }
+
+        emptyCart.style.display = "none";
+
+        cart.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "border p-4 flex justify-between items-center";
+            div.innerHTML = `
+                <span>${item.name} (x${item.qty})</span>
+                <button class="remove-btn bg-red-500 text-white px-3 py-1 rounded" data-id="${item.id}">Remove</button>
+            `;
+            container.appendChild(div);
+        });
+
+        document.querySelectorAll(".remove-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const id = this.getAttribute("data-id");
+                removeFromCart(id);
+            });
+        });
+    }
+
+    // Add event listeners to buttons
+    document.querySelectorAll(".add-to-cart").forEach(btn => {
+        btn.addEventListener("click", function () {
+            const productDiv = this.closest(".product");
+            const product = {
+                id: productDiv.getAttribute("data-id"),
+                name: productDiv.getAttribute("data-name"),
+                price: productDiv.getAttribute("data-price")
+            };
+            addToCart(product);
+        });
+    });
+
+    // Initial call
+    updateBadge();
+    renderCart();
+</script>
+
+
+
+    
+</body>
+</html>
