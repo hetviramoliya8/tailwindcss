@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega mart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+    <style>
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        #cart-icon svg {
+            font-size: 24px;
+
+        }
+
+        #cart-icon span {
+            position: absolute;
+            right: 160px;
+            background: #0096d7;
+            color: #fff;
+            font-size: 10px;
+            padding: 0px 3px;
+            border-radius: 50%;
+        }
+
+        .cart-model {
+            position: fixed;
+            top: 0;
+            right: 0%;
+            max-width: 500px;
+            width: 100%;
+            height: 100vh;
+            background: #fff;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
+        .open-cart {
+            right: 0;
+            transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+        }
+
+        .cart-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 1rem;
+        }
+
+        .cart-head h2 {
+            color: #333;
+        }
+
+        .close-btn {
+            font-size: 20px;
+            background-color: #eee;
+            border: none;
+            padding: 2px 1px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+
+        .cart-total {
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-align: right;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .chekout-btn {
+            padding: 8px 0;
+            background-color: #ff4757;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .cart {
+            position: fixed;
+            top: 0;
+            right: 0%;
+            width: 360px;
+            height: 100%;
+            background: #fff;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 65px 20px 40px;
+            z-index: 100;
+            overflow: auto;
+            transition: 0.5s;
+        }
+
+        .car-active {
+            right: 0;
+        }
+
+        .cart-title {
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .cart-box {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .cart-box img {
+            width: 100px;
+            height: 100px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+
+        .cart-detail {
+            display: grid;
+            gap: 8px;
+            margin-right: auto;
+        }
+
+        .cart-product-title {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .cart-price {
+            font-weight: 500;
+        }
+
+        .cart-quantity {
+            display: flex;
+            width: 100px;
+            border: 1px solid #999;
+            border-radius: 6px;
+        }
+
+        .cart-quantity button {
+            background-color: transparent;
+            width: 30px;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .cart-quantity #document {
+            color: #999;
+        }
+
+        .cart-quantity .number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            border-right: 1px solid #999;
+            border-left: 1px solid #999;
+            cursor: default;
+        }
+
+        .cart-remove {
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .total {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            border-top: 1px solid #333;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .totle-price {
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .btn-buy {
+            display: block;
+            padding: 10px 30px;
+            background: #e35f26;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #fff;
+            margin: 20px auto 0;
+            cursor: pointer;
+        }
+
+        #cart-close {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            font-size: 35px;
+            cursor: pointer;
+        }
+    </style>
+
+    <!-- nav1 -->
+    <div
+        class="w-[100%] px-[100px] bg-gray-100 flex items-center justify-between bg-gray-100 p-2 border-b border-gray-100 max-lg:w-350 max-xl:w-370 max-2xl:w-376 ">
+        <div class="text-[10px] font-[200] text-[#666666 p-[5px] ">
+            <h1 class="max-sm:text-[30px]">Welcome to worldwide Megamart!</h1>
+        </div>
+        <div class="flex w-90 h-5 max-sm:w-170 ">
+            <div class="h-[18px] w-[136px] flex items-center max-sm:w-150">
+                <img src="./img/Location.png" alt="" class="max-sm:w-[30px]">
+                <span class="font-[200] text-[10px] ml-2 max-sm:text-[22px]">Deliver to</span>
+                <p class="font-[400] text-[10px] ml-2 max-sm:text-[20px]">423651</p>
+                <div class="h-[24px] border-1 ml-3 border-gray-300"></div>
+            </div>
+            <div class="h-[18px] w-[126px] flex items-center ml-3  max-sm:w-150">
+                <img src="./img/iconoir_delivery-truck.png" alt="" class="max-sm:w-[30px]">
+                <span class="font-[200] text-[10px] ml-2 max-sm:text-[22px]">Track your order</span>
+                <div class="h-[24px] border-1 ml-3 border-gray-300"></div>
+            </div>
+            <div class="h-[18px] w-[126px] flex items-center max-sm:w-150">
+                <img src="./img/Discount.png" alt="" class="max-sm:w-[30px]">
+                <span class="font-[200] text-[10px] ml-2 max-sm:text-[22px]">All offers</span>
+            </div>
+        </div>
+        <!-- nav1 -->
+
+    </div>
+    <!-- nav2 -->
+    <div
+        class="h-[90px] w-[100%] px-[100px]  items-center flex justify-between border-b border-gray-100 max-lg:w-350 max-xl:w-360 max-2xl:w-366 max-sm:py-19">
+        <div class=" flex justify-between border-1 border-gray-100 w-[100%] h-[60px]  items-center ">
+
+            <div class=" flex items-center ">
+                <img src="./img/Group 2.png" alt="" class="w-[48px] max-sm:w-30">
+                <img src="./img/MegaMart.png" alt="" class="w-[138px] h-[28px] ml-3  max-sm:w-60 max-sm:h-20">
+            </div>
+            <div class=" rounded-md w-120 p-2 flex items-center bg-[#f3f9fb] max-lg:hidden  h-10">
+                <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 24 24">
+                    <path fill="#008ecc"
+                        d="M20.031 20.79c.46.46 1.17-.25.71-.7l-3.75-3.76a7.9 7.9 0 0 0 2.04-5.31c0-4.39-3.57-7.96-7.96-7.96s-7.96 3.57-7.96 7.96s3.57 7.96 7.96 7.96c1.98 0 3.81-.73 5.21-1.94zM4.11 11.02c0-3.84 3.13-6.96 6.96-6.96c3.84 0 6.96 3.12 6.96 6.96s-3.12 6.96-6.96 6.96c-3.83 0-6.96-3.12-6.96-6.96"
+                        stroke-width="0.5" stroke="#008ecc" />
+                </svg>
+                <input type="text" placeholder="Search essentials, groceries and more..."
+                    class="ml-3 w-160 bg-[#f3f9fb]">
+                <img src="./img/list.png" alt="" class="ml-33">
+
+            </div>
+            <div class="w-[259px] h-[24px] flex items-center max-sm:w-150">
+                <div class="flex w-[150px] max-sm:w-450">
+
+                    <img src="./img/user.png" alt="" class="max-sm:w-20">
+                    <h1 class="text-[#666666] font-[600] max-sm:text-[30px] max-sm:mt-5">Sign Up/Sign In </h1>
+                </div>
+                <div class="h-[24px] border-1 ml-3 border-gray-300"></div>
+                <div class="flex  w-[90px] ml-3 max-sm:w-400 cursor-pointer" class="cart-icon" id="cart-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        class="max-sm:w-15" id="cart-icon " class="cart-icon">
+                        <path fill="#0096d7"
+                            d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2m0 1a1 1 0 0 0-1 1a1 1 0 0 0 1 1a1 1 0 0 0 1-1a1 1 0 0 0-1-1m-9-1a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2m0 1a1 1 0 0 0-1 1a1 1 0 0 0 1 1a1 1 0 0 0 1-1a1 1 0 0 0-1-1M18 6H4.27l2.55 6H15c.33 0 .62-.16.8-.4l3-4c.13-.17.2-.38.2-.6a1 1 0 0 0-1-1m-3 7H6.87l-.77 1.56L6 15a1 1 0 0 0 1 1h11v1H7a2 2 0 0 1-2-2a2 2 0 0 1 .25-.97l.72-1.47L2.34 4H1V3h2l.85 2H18a2 2 0 0 1 2 2c0 .5-.17.92-.45 1.26l-2.91 3.89c-.36.51-.96.85-1.64.85"
+                            stroke-width="0.5" stroke="#0096d7" />
+                    </svg>
+                    <span id="cart-count">0</span>
+
+                    <h1 class="text-[#666666] ml-3 font-[600] max-sm:text-[30px] max-sm:mt-5">Cart </h1>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- nav2 -->
+
+    <!-- nav3 -->
+    <div
+        class="h-[69px] w-[100%] px-[100px] items-center flex border-b border-gray-100 max-lg:w-350 max-xl:w-360 max-2xl:w-366">
+        <div class="w-[100%]  flex justify-between ">
+
+            <div class="w-[113px] h-36px  rounded-3xl p-2 bg-[#008ecc] text-white ">
+
+                <select name="" id="">
+                    <option value="" class="max-sm:text-[40px]">Groceries</option>
+                </select>
+            </div>
+            <div class="w-[159px] h-36px ml-2 rounded-3xl p-2  flex bg-[#f3f9fb] gap-2 ">
+                <h1 class="text-[15px] max-sm:text-[15px]">Premium Fruits</h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" stroke="#008ecc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="m7 10l5 5m0 0l5-5" />
+                </svg>
+            </div>
+            <div class="w-[159px] h-36px ml-2 rounded-3xl p-2  flex bg-[#f3f9fb] gap-2">
+                <h1 class="text-[15px] max-sm:text-[15px]">Home & KItchen</h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" stroke="#008ecc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="m7 10l5 5m0 0l5-5" />
+                </svg>
+            </div>
+            <div class="w-[119px] h-36px ml-2 rounded-3xl p-2  flex bg-[#f3f9fb] gap-2">
+                <h1 class="text-[15px] max-sm:text-[15px]">Fashion</h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" stroke="#008ecc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="m7 10l5 5m0 0l5-5" />
+                </svg>
+            </div>
+            <div class="w-[129px] h-36px ml-2 rounded-3xl p-2  flex bg-[#f3f9fb] gap-2">
+                <h1 class="text-[15px]">Electronics</h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" stroke="#008ecc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="m7 10l5 5m0 0l5-5" />
+                </svg>
+            </div>
+            <div class="w-[100px] h-36px ml-2 rounded-3xl p-2  flex bg-[#f3f9fb] gap-2">
+                <h1 class="text-[15px] ">Beauty</h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" stroke="#008ecc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="m7 10l5 5m0 0l5-5" />
+                </svg>
+            </div>
+
+            <div class="w-[179px] h-36px ml-2 rounded-3xl p-2  flex bg-[#f3f9fb] gap-1">
+                <h1 class="text-[15px] ">Home Improvement</h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" stroke="#008ecc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="m7 10l5 5m0 0l5-5" />
+                </svg>
+            </div>
+
+            <div class="w-[210px] h-36px ml-2 rounded-3xl p-2  flex bg-[#f3f9fb] max-lg:hidden gap-2">
+                <h1 class="text-[15px] ">Sports, Toys & Luggage</h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" stroke="#008ecc" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="m7 10l5 5m0 0l5-5" />
+                </svg>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- nav3 -->
+
+    <!-- hero -->
+    <div class=" w-[100%]  px-[100px] items-center flex mt-5 max-lg:w-350 max-xl:w-360 max-2xl:w-366">
+        <div style="background-image: url(./img/bg.jpg); " class="w-[100%] h-[316px] rounded-2xl ">
+            <img src="./img/Group 21.png" alt="" class="mt-26 ml-[-45px] ">
+            <div class="mt-[-170px]">
+
+                <span class="text-white text-[30px] ml-30">Best Deal Online on smart watches</span>
+                <p class="text-white text-[63px] ml-30">SMART WEARABLE.</p>
+                <h1 class="text-white text-[30px] ml-30">UP to 80% OFF</h1>
+                <img src="./img/Group 17.png" alt="" class="ml-30 mt-20">
+            </div>
+            <div class="flex justify-end">
+
+                <img src="./img/Group 22.png" alt="" class="mt-[-189px] mr-[-50px] h-23">
+            </div>
+
+        </div>
+
+    </div>
+    <!-- hero -->
+
+    <!-- Grab -->
+    <div class=" w-[100%]  px-[100px] items-center flex mt-20 max-lg:w-350 max-xl:w-360 max-2xl:w-366">
+
+        <div class="flex justify-between w-[100%] items-center border-b border-gray-100 ">
+
+            <div class="flex ">
+                <h1 class="font-[600] text-[24px] text-[#666666]  max-sm:text-[40px]">Grab the best deal on</h1>
+                <span class="font-[600] text-[24px] text-[#008ecc] ml-2 max-sm:text-[40px]">Smartphones</span>
+                <br>
+            </div>
+            <div class="flex items-center">
+                <h1 class="text-[#666666] max-sm:text-[40px]">View All</h1>
+                <img src="./img/Arrow - Down 2 (1).png" alt="" class="w-5 h-5 ml-2 max-sm:w-10 max-sm:h-10">
+            </div>
+        </div>
+
+
+    </div>
+    <div class="w-[378px] h-[3px] bg-[#008ecc] ml-26"></div>
+
+    <div class=" w-[100%]  px-[100px] items-center flex mt-10 max-lg:w-350 max-xl:w-360 max-sm:flex-wrap">
+
+        <div class="w-[100%] h-82 flex justify-between ">
+
+
+            <div class="w-[200px] h-[382px] rounded-2xl border-1 border-gray-100 ">
+
+                <div class="  items-center flex  border-b border-gray-100 ">
+                    <img src="./img/New Project (2).png" alt="" class="rounded-tl-2xl rounded-tr-2xl w-50 ">
+                </div>
+                <div>
+                    <div class="border-1 border-gray-100 w-[200px] h-20 max-sm:w-100">
+
+                        <h1 class="font-[500] text-[#222222] ml-2 mt-3 text-[16px]">Galaxy S22 Ultra</h1>
+                        <div class="flex">
+                            <p class="font-[600] mt-2 text-[16px] ml-2">₹ 32999</p>
+                            <s class="text-[16px] font-[200] mt-2 ml-3">₹ 74999</s>
+                        </div>
+                        <p class="text-[#249b3e] text-[16px] font-[600] ml-3 mt-4">Save - ₹32999</p>
+                        <div
+                            class="add-to-cart border-1 p-2 flex justify-center text-white bg-[#008ecc] rounded-2xl m-2">
+                            Add to cart
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="w-[202px] h-[382px] rounded-2xl border-2 border-blue-400 ">
+
+                <div class="  items-center flex  border-b border-gray-100 ">
+                    <img src="./img/New Project (3).png" alt="" class="rounded-tl-2xl rounded-tr-2xl w-50 ">
+                </div>
+                <div>
+                    <div class="border-1 border-gray-100 w-[202px] h-20">
+
+                        <h1 class="font-[500] text-[#222222] ml-2 mt-3 text-[16px]">Galaxy M13 (4GB | 64GB)</h1>
+                        <div class="flex">
+                            <p class="font-[600] mt-2 text-[16px] ml-2">₹ 10499</p>
+                            <s class="text-[16px] font-[200] mt-2 ml-3">₹ 14999</s>
+                        </div>
+                        <p class="text-[#249b3e] text-[16px] font-[600] ml-3 mt-4">Save - ₹4500</p>
+                    </div>
+                    <div
+                        class="add-to-cart border-1 p-2 flex justify-center text-white bg-[#008ecc] rounded-2xl m-2 mt-10">
+                        Add to cart
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="w-[202px] h-[382px] rounded-2xl border-1 border-gray-100 ">
+
+                <div class="  items-center flex  border-b border-gray-100 ">
+                    <img src="./img/New Project (4).png" alt="" class="rounded-tl-2xl rounded-tr-2xl w-50 ">
+                </div>
+                <div>
+                    <div class="border-1 border-gray-100 w-[202px] h-20">
+
+                        <h1 class="font-[500] text-[#222222] ml-2 mt-3 text-[16px]">Galaxy M33 (4GM | 64GB) </h1>
+                        <div class="flex">
+                            <p class="font-[600] mt-2 text-[16px] ml-2">₹ 16999</p>
+                            <s class="text-[16px] font-[200] mt-2 ml-3">₹ 24999</s>
+                        </div>
+                        <p class="text-[#249b3e] text-[16px] font-[600] ml-3 mt-4">Save - ₹8000</p>
+                        <div
+                            class="add-to-cart border-1 p-2 flex justify-center text-white bg-[#008ecc] rounded-2xl m-2 ">
+                            Add to cart
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="w-[202px] h-[382px] rounded-2xl border-1 border-gray-100 ">
+
+                <div class="  items-center flex  border-b border-gray-100">
+                    <img src="./img/New Project (5).png" alt="" class="rounded-tl-2xl rounded-tr-2xl w-50 ">
+                </div>
+                <div>
+                    <div class="border-1 border-gray-100 w-[202px] h-20">
+
+                        <h1 class="font-[500] text-[#222222] ml-2 mt-3 text-[16px]">Galaxy M53 (4GB | 64GB)</h1>
+                        <div class="flex">
+                            <p class="font-[600] mt-2 text-[16px] ml-2">₹ 31999</p>
+                            <s class="text-[16px] font-[200] mt-2 ml-3">₹ 40999</s>
+                        </div>
+                        <p class="text-[#249b3e] text-[16px] font-[600] ml-3 mt-4">Save - ₹9000</p>
+                        <div
+                            class="add-to-cart border-1 p-2 flex justify-center text-white bg-[#008ecc] rounded-2xl m-2">
+                            Add to cart
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-[202px] h-[382px] rounded-2xl border-1 border-gray-100 ">
+
+                <div class="  items-center flex  border-b border-gray-100 ">
+                    <img src="./img/New Project (6).png" alt="" class="rounded-tl-2xl rounded-tr-2xl w-50 ">
+                </div>
+                <div>
+                    <div class="border-1 border-gray-100 w-[202px] h-20">
+
+                        <h1 class="font-[500] text-[#222222] ml-2 mt-3 text-[16px]">Galaxy S22 Ultra</h1>
+                        <div class="flex">
+                            <p class="font-[600] mt-2 text-[16px] ml-2">₹ 67999</p>
+                            <s class="text-[16px] font-[200] mt-2 ml-3">₹ 85999</s>
+                        </div>
+                        <p class="text-[#249b3e] text-[16px] font-[600] ml-3 mt-4">Save - ₹18000</p>
+                        <div
+                            class="add-to-cart border-1 p-2 flex justify-center text-white bg-[#008ecc] rounded-2xl m-2 ">
+                            Add to cart
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+
+    <!-- Grab -->
+
+
+
+
+    <!-- shop -->
+    <div class=" w-[100%]  px-[100px] items-center flex mt-20 max-lg:w-350 max-xl:w-360">
+        <div class="flex justify-between w-[100%] items-center border-b border-gray-100">
+
+            <div class="flex ">
+                <h1 class="font-[600] text-[24px] text-[#666666] max-sm:text-[40px]">Shop From</h1>
+                <span class="font-[600] text-[24px] text-[#008ecc] ml-2  max-sm:text-[40px]">Top Categories</span>
+                <br>
+            </div>
+            <div class="flex items-center">
+                <h1 class="text-[#666666] max-sm:text-[40px]">View All</h1>
+                <img src="./img/Arrow - Down 2 (1).png" alt="" class="w-5 h-5 ml-2 max-sm:w-10 max-sm:h-10">
+            </div>
+        </div>
+    </div>
+    <div class="w-[300px] h-[3px] bg-[#008ecc] ml-24"></div>
+
+
+
+    <div class=" w-[100%]  pl-[100px] pr-[100px] items-center flex mt-5 max-lg:w-350 max-xl:w-360">
+
+        <div class="w-[100%]  mt-10 flex justify-between ">
+            <div class=" h-42  w-34 ">
+
+                <div
+                    class="w-[132px] h-[132px]  rounded-full bg-[#f5f5f5] flex justify-center border-1  items-center border-blue-400">
+                    <img src="./img/image 3 (1).png" alt="" class="w-[52px] h-[98px] ">
+                </div>
+                <div class="ml-9 mt-2">
+
+                    <h1>Mobile</h1>
+                </div>
+            </div>
+
+
+            <div class=" h-42  w-34 ">
+
+                <div class="w-[132px] h-[132px]  rounded-full bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/image 3 (2).png" alt="" class="w-[52px] h-[98px] ">
+                </div>
+                <div class="ml-9 mt-2">
+
+                    <h1>Cosmetics</h1>
+                </div>
+            </div>
+
+            <div class=" h-42  w-34 ">
+
+                <div class="h-[132px] rounded-full bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/Ellipse 41 (1).png" alt="" class="w-[92px] h-[98px] ">
+                </div>
+                <div class="ml-9 mt-2">
+
+                    <h1>Electronics</h1>
+                </div>
+            </div>
+
+            <div class=" h-42  w-34">
+
+                <div class="w-[132px] h-[132px]  rounded-full bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/image 4.png" alt="" class="w-[52px] h-[98px] ">
+                </div>
+                <div class="ml-9 mt-2">
+
+                    <h1>Furniture</h1>
+                </div>
+            </div>
+
+            <div class=" h-42 w-34 ">
+
+                <div class="w-[132px] h-[132px]  rounded-full bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/image 5.png" alt="" class="w-[52px] h-[78px] ">
+                </div>
+                <div class="ml-9 mt-2">
+
+                    <h1>Watches</h1>
+                </div>
+            </div>
+
+            <div class=" h-42  ">
+
+                <div class="w-[132px] h-[132px]  rounded-full bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/image 6.png" alt="" class="w-[52px] h-[98px] ">
+                </div>
+                <div class="ml-9 mt-2">
+
+                    <h1>Decor</h1>
+                </div>
+            </div>
+
+            <div class=" h-42 w-34 ">
+
+                <div class="w-[132px] h-[132px]  rounded-full bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/image 7.png" alt="" class="w-[82px] h-[98px] ">
+                </div>
+                <div class="ml-9 mt-2">
+
+                    <h1>Accessories</h1>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <!-- shop -->
+
+    <!-- top -->
+    <div class=" w-[100%]  px-[100px] items-center flex mt-20 max-lg:w-350 max-xl:w-360">
+        <div class="flex justify-between w-[100%] items-center border-b border-gray-100">
+
+            <div class="flex ">
+                <h1 class="font-[600] text-[24px] text-[#666666] max-sm:text-[40px]">Shop From</h1>
+                <span class="font-[600] text-[24px] text-[#008ecc] ml-2 max-sm:text-[40px]">Top Categories</span>
+                <br>
+            </div>
+            <div class="flex items-center">
+                <h1 class="text-[#666666] max-sm:text-[40px]">View All</h1>
+                <img src="./img/Arrow - Down 2 (1).png" alt="" class="w-5 h-5 ml-2 max-sm:w-10 max-sm:h-10">
+            </div>
+        </div>
+    </div>
+    <div class="w-[278px] h-[3px] bg-[#008ecc] ml-26"></div>
+
+
+
+
+    <div class=" w-[100%]  pl-[100px] pr-[100px] items-center flex mt-10 ">
+
+        <div class=" w-[100%] flex justify-between ">
+            <img src="./img/Group 50.png" alt="" class="">
+            <img src="./img/Group 51.png" alt="" class="">
+            <img src="./img/Group 52.png" alt="" class="">
+
+        </div>
+
+    </div>
+    <div class="flex justify-center mt-[-80px] max-lg:w-350 max-xl:w-360">
+        <img src="./img/Group 53.png" alt="" class="">
+    </div>
+    </div>
+
+    <!-- top -->
+
+
+    <!-- daily-->
+    <div class=" w-[100%]  p-[100px] items-center flex mt-20 max-lg:w-350 max-xl:w-360">
+        <div class="flex justify-between w-[100%] items-center border-b border-gray-100">
+
+            <div class="flex ">
+                <h1 class="font-[600] text-[24px] text-[#666666]  max-sm:text-[40px]">Daily</h1>
+                <span class="font-[600] text-[24px] text-[#008ecc] ml-2  max-sm:text-[40px] ">Essentials</span>
+                <br>
+            </div>
+            <div class="flex items-center">
+                <h1 class="text-[#666666]  max-sm:text-[40px]">View All</h1>
+                <img src="./img/Arrow - Down 2 (1).png" alt="" class="w-5 h-5 ml-2 max-sm:w-10 max-sm:h-10">
+            </div>
+        </div>
+    </div>
+    <div class="w-[170px] h-[3px] bg-[#008ecc] ml-26 mt-[-100px]"></div>
+
+
+    <div class=" w-[100%]  pl-[100px] pr-[100px] items-center flex max-lg:w-350 max-xl:w-360">
+
+
+        <div class="w-[90%]  mt-10 flex justify-between flex flex-wrap">
+            <div class=" h-42  w-34 ">
+
+                <div
+                    class="w-[187px] h-[187px] rounded-2xl border-1 bg-[#f5f5f5] flex justify-center  items-center border-blue-400 max-sm:w-100 max-sm:h-100">
+                    <img src="./img/41624-7-groceries-hd-download-hd-png 1.png" alt="" class=" max-sm:w-100">
+                </div>
+                <div class="max-sm:w-200">
+
+                    <h1 class="text-[#666666] w-30 font-[500] ml-9 mt-4 max-sm:text-[50px] max-sm:w-150">Daily
+                        Essentials</h1>
+                    <p class="font-[600] text-[20px] w-40 ml-5 max-sm:text-[30px] max-sm:w-100 max-sm:ml-10">UP to 50%
+                        OFF</p>
+                </div>
+            </div>
+
+
+            <div class=" h-42  w-34 ">
+
+                <div
+                    class="w-[187px] h-[187px] rounded-2xl bg-[#f5f5f5] flex justify-center  items-center max-sm:w-100 max-sm:h-100">
+                    <img src="./img/54018-9-grocery-free-hq-image 2.png" alt="" class=" max-sm:w-100 ">
+                </div>
+                <div class="">
+
+                    <h1 class="text-[#666666] w-30 font-[500] ml-9 mt-4 max-sm:text-[50px] max-sm:w-150">Vegitables</h1>
+                    <p class="font-[600] text-[20px] w-40 ml-5 max-sm:w-100 max-sm:ml-10  max-sm:text-[30px]">UP to 50%
+                        OFF</p>
+                </div>
+            </div>
+
+            <div class=" h-42  w-34">
+
+                <div class="w-[187px] h-[187px] rounded-2xl bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/pngegg 1.png" alt="" class=" ">
+                </div>
+                <div class="">
+
+                    <h1 class="text-[#666666] w-30 font-[500] ml-9 mt-4">Fruits</h1>
+                    <p class="font-[600] text-[20px] w-40 ml-5">UP to 50% OFF</p>
+                </div>
+            </div>
+
+            <div class=" h-42  w-34 max-sm:hidden">
+
+                <div class="w-[187px] h-[187px] rounded-2xl bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/23410-4-strawberry-photo 1.png" alt="" class=" ">
+                </div>
+                <div class="max-sm:hidden">
+
+                    <h1 class="text-[#666666] w-30 font-[500] ml-9 mt-4">Stroberry</h1>
+                    <p class="font-[600] text-[20px] w-40 ml-5">UP to 50% OFF</p>
+                </div>
+            </div>
+            <div class=" h-42  w-34 max-sm:hidden">
+
+                <div class="w-[187px] h-[187px] rounded-2xl bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/22136-3-mango-fruit 1.png" alt="" class=" ">
+                </div>
+                <div class="">
+
+                    <h1 class="text-[#666666] w-30 font-[500] ml-9 mt-4">Mango</h1>
+                    <p class="font-[600] text-[20px] w-40 ml-5">UP to 50% OFF</p>
+                </div>
+            </div>
+
+            <div class=" h-42  w-34 max-sm:hidden">
+
+                <div class="w-[187px] h-[187px] rounded-2xl bg-[#f5f5f5] flex justify-center  items-center">
+                    <img src="./img/35763-7-cherry-fruit-file 1.png" alt="" class=" ">
+                </div>
+                <div class="">
+
+                    <h1 class="text-[#666666] w-30 font-[500] ml-9 mt-4">Cherry</h1>
+                    <p class="font-[600] text-[20px] w-40 ml-5">UP to 50% OFF</p>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- daily -->
+
+
+
+    <!--footer-->
+    <div class="relative text-white mt-50 w-100% h-150 bg-[#008ECC] max-lg:w-350 max-xl:w-360 max-sm:mt-100">
+        <div class="absolute top-0 left-43 flex gap-20">
+            <div>
+                <img src="./img/footer mega.png" alt="" class="w-55">
+                <h2 class="font-semibold text-xl mt-19">Contact Us</h2>
+                <div class="flex gap-2 mt-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="#fff"
+                            d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01m-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18l-3.12.82l.83-3.04l-.2-.31a8.26 8.26 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24c2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81c-.23-.08-.39-.12-.56.12c-.17.25-.64.81-.78.97c-.14.17-.29.19-.54.06c-.25-.12-1.05-.39-1.99-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.14-.25-.02-.38.11-.51c.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31c-.22.25-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.23 3.74c.59.26 1.05.41 1.41.52c.59.19 1.13.16 1.56.1c.48-.07 1.47-.6 1.67-1.18c.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28" />
+                    </svg>
+                    <div>
+                        <h2>Whats App</h2>
+                        <h3>+1 202-918-2132</h3>
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 256 256">
+                        <path fill="#fff"
+                            d="M146.2 46.45a6 6 0 0 1 7.35-4.25a84.24 84.24 0 0 1 60.25 60.25a6 6 0 0 1-4.25 7.35a6 6 0 0 1-1.55.2a6 6 0 0 1-5.8-4.45a72.34 72.34 0 0 0-51.75-51.75a6 6 0 0 1-4.25-7.35m-3.75 39.35C157 89.68 166.32 99 170.2 113.55A6 6 0 0 0 176 118a6 6 0 0 0 1.55-.2a6 6 0 0 0 4.25-7.35c-5-18.71-17.54-31.25-36.25-36.25a6 6 0 1 0-3.1 11.6m79.44 97A54.25 54.25 0 0 1 168 230C89.7 230 26 166.3 26 88a54.25 54.25 0 0 1 47.17-53.89a14 14 0 0 1 14.56 8.39l21.1 47.1a14 14 0 0 1-1.12 13.28a6 6 0 0 1-.42.57l-21.07 25.06a1.89 1.89 0 0 0 0 1.67c7.66 15.68 24.1 32 40 39.65a1.88 1.88 0 0 0 1.68-.06l24.69-21a5 5 0 0 1 .56-.42a14 14 0 0 1 13.28-1.22l47.24 21.17a14 14 0 0 1 8.22 14.53ZM210 181.32a2 2 0 0 0-1.21-2l-47.25-21.17a1.92 1.92 0 0 0-1.6.1l-24.68 21c-.18.15-.37.29-.56.42a14 14 0 0 1-13.77 1c-18.36-8.87-36.66-27-45.53-45.19a14 14 0 0 1 .91-13.73a5 5 0 0 1 .43-.57l21.05-25.09a2 2 0 0 0 0-1.67L76.74 47.31A2 2 0 0 0 74.9 46h-.23A42.24 42.24 0 0 0 38 88c0 71.68 58.32 130 130 130a42.24 42.24 0 0 0 42-36.68" />
+                    </svg>
+                    <div>
+                        <h2>Call Us</h2>
+                        <h3>+1 202-918-2132</h3>
+                    </div>
+                </div>
+                <h2 class="font-semibold text-xl mt-7">Download App</h2>
+                <div class="flex gap-5 mt-3">
+                    <img src="./img/Group 200.png" alt="" class="w-60">
+                </div>
+            </div>
+            <div class="flex gap-40 mt-19 ">
+                <div>
+                    <h1 class="text-xl font-[600]">Most Popular Categories</h1>
+                    <div class="h-[3px] w-56 mt-4 rounded-2xl bg-white"></div>
+                    <ul class="text-md mt-8 flex flex-col gap-3 list-disc pl-5">
+                        <li>Staples</li>
+                        <li>Beverages</li>
+                        <li>Personal Care</li>
+                        <li>Home Care</li>
+                        <li>Baby Care</li>
+                        <li>Vegetables & Food</li>
+                        <li>Snacks & Food</li>
+                        <li>Dairy & Bakery</li>
+                    </ul>
+                </div>
+                <div>
+                    <h1 class="text-xl font-[600]">Customer Services</h1>
+                    <div class="h-[3px] w-42 mt-4 rounded-2xl bg-white"></div>
+                    <ul class="text-md mt-8 flex flex-col gap-3 list-disc pl-5">
+                        <li>About Us</li>
+                        <li>Terms & Condition</li>
+                        <li>FAQ</li>
+                        <li>Privacy Policy</li>
+                        <li>E-waste Policy</li>
+                        <li>Cancellation & Return Policy</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-[-30] ml-50">
+                <img src="./img/Mask group (1).png" alt="">
+            </div>
+        </div>
+        <div
+            class="absolute left-30 top-130 flex flex-col items-center max-2xl:top-116 max-2xl:pl-13 max-2xl:pr-13 max-2xl:left-0 max-2xl:bg-[#008ECC]">
+            <div class="h-[1px] bg-[#05ABF3] w-[1090px]"></div>
+            <h6 class="text-xl font-[400] my-5">© 2022 All rights reserved. Reliance Retail Ltd.</h6>
+        </div>
+    </div>
+       <!--footer-->
+    <!-- cart model -->
+
+
+    <script>
+        const cartIcon = document.querySelector("#cart-icon")
+        const cart = document.querySelector(".cart")
+        const cartClose = document.querySelector("#cart-close")
+
+        cartIcon.addEventListener("click", () => cart.classList.add("active"));
+        cartClose.addEventListener("click", () => cart.classList.remove("active"));
+
+        const addCartButtons = document.querySelectorAll(".add-cart")
+
+        addCartButtons.forEach(button => {
+            button.addEventListener("click", event => {
+                const productBox = event.target.closest(".product-box")
+                addToCart(productBox);
+
+            })
+        })
+
+        const cartContent = document.querySelector(".cart-content")
+        const addToCart = productBox => {
+            const productImgSrc = productBox.querySelectorAll("img").src;
+            const productTitle = productBox.querySelectorAll(".product-title").textContent;
+            const productPrice = productBox.querySelectorAll(".price").textContent;
+
+            const cartBox = document.createElement("div")
+            cartBox.classList.add("cart-box")
+            cartBox.innerHTML = `
+         <img src="${productImgSrc}"class="cart-img">
+            <div class="cart-detail">
+                <h1 class="cart-product-tittle">${productTitle}</h1>
+                <span class="cart-price">${productTitle}</span>
+                <div class="cart-quantity">
+                    <button id="decrement">-</button>
+                    <span class="number">1</span>
+                    <button id="increment">+</button>
+                </div>
+            </div>
+            <i class="fa-solid fa-trash-can cart-remove"></i>`;
+
+            cartContent.appendChild(cartBox);
+        }
+
+
+    </script>
+</body>
+
+</html>
